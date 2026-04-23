@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conferência de Romaneios</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <style>
+    /* ── Conferência — estilos específicos ───────────────── */
+    .conf-header-info {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      padding: 12px 24px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--txt2);
+    }
+    .conf-header-info span strong { color: var(--txt); }
+
+    .conf-progress {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 24px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .conf-badge {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .conf-badge.pendente   { background: var(--bg3); color: var(--txt3); border: 1px solid var(--border); }
+    .conf-badge.ok         { background: #14532d; color: #4ade80; border: 1px solid #166534; }
+    .conf-badge.divergencia{ background: #78350f; color: #fbbf24; border: 1px solid #92400e; }
+    .conf-badge.finalizada { background: #1e3a5f; color: #60a5fa; border: 1px solid #1d4ed8; }
+
+    .conf-tabela-wrap { padding: 16px 24px; overflow-x: auto; }
+
+    table.conf-tab { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table.conf-tab thead th {
+      background: var(--bg2);
+      color: var(--txt2);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    table.conf-tab thead th.num { text-align: right; }
+    table.conf-tab tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+    table.conf-tab tbody tr:hover { background: var(--hover-row); }
+    table.conf-tab tbody td { padding: 7px 10px; color: var(--txt); vertical-align: middle; }
+    table.conf-tab tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    table.conf-tab tbody td.cod { font-family: monospace; font-size: 12px; color: var(--txt2); }
+
+    .conf-input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--txt);
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 13px;
+      width: 90px;
+      text-align: right;
+      transition: border .15s;
+    }
+    .conf-input:focus { outline: none; border-color: var(--accent); }
+    .conf-input.ok          { border-color: var(--green); }
+    .conf-input.divergencia { border-color: var(--yellow); }
+
+    .conf-obs {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--txt);
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-size: 12px;
+      width: 140px;
+    }
+    .conf-obs:focus { outline: none; border-color: var(--accent); }
+
+    .status-dot {
+      display: inline-block;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+    .dot-pendente    { background: var(--txt3); }
+    .dot-ok          { background: var(--green); }
+    .dot-divergencia { background: var(--yellow); }
+
+    .conf-acoes {
+      display: flex;
+      gap: 10px;
+      padding: 14px 24px;
+      border-top: 1px solid var(--border);
+      background: var(--bg2);
+      position: sticky;
+      bottom: 0;
+    }
+
+    .erros-nfe {
+      margin: 12px 24px;
+      padding: 10px 14px;
+      background: #450a0a;
+      border: 1px solid #991b1b;
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--red);
+    }
+    .erros-nfe summary { cursor: pointer; font-weight: 600; margin-bottom: 4px; }
+    .erros-nfe ul { margin: 6px 0 0 12px; }
+    .erros-nfe li { margin-bottom: 3px; word-break: break-all; }
+
+    .loading-sefaz {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 48px 24px;
+      color: var(--txt2);
+      font-size: 14px;
+    }
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .conf-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      margin-bottom: 8px;
+      background: var(--bg2);
+      cursor: pointer;
+      transition: border-color .15s;
+    }
+    .conf-list-item:hover { border-color: var(--accent); }
+    .conf-list-left { display: flex; flex-direction: column; gap: 3px; }
+    .conf-list-title { font-weight: 600; font-size: 13px; }
+    .conf-list-sub   { font-size: 11px; color: var(--txt2); }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <h1>Conferência de Romaneios</h1>
+    <span class="badge">BETA</span>
+  </div>
+  <div class="header-right">
+    <span id="jwt-status" class="jwt-status">Conectando...</span>
+    <button class="btn-icon" onclick="toggleTheme()" id="btn-theme" title="Alternar tema">☀</button>
+  </div>
+</header>
+
+<!-- FILTROS -->
+<div class="filtros" id="filtros">
+  <div class="filtro-grupo">
+    <label>Data Inicial</label>
+    <input type="date" id="dataInicial" />
+  </div>
+  <div class="filtro-grupo">
+    <label>Data Final</label>
+    <input type="date" id="dataFinal" />
+  </div>
+  <button class="btn-primary" id="btn-buscar" onclick="buscarRomaneios()">Buscar Romaneios</button>
+</div>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<div id="main-content" style="padding: 20px 24px;">
+  <div class="vazio" style="text-align:center; color: var(--txt3); padding: 40px 0;">
+    Selecione um período e clique em Buscar Romaneios.
+  </div>
+</div>
+
+<!-- TELA DE CONFERÊNCIA (oculta inicialmente) -->
+<div id="tela-conferencia" style="display:none;">
+  <div class="conf-header-info" id="conf-info-bar"></div>
+  <div class="conf-progress" id="conf-progress-bar"></div>
+  <div id="conf-erros-nfe"></div>
+  <div id="conf-corpo"></div>
+  <div class="conf-acoes" id="conf-acoes"></div>
+</div>
+
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/conferencia.js"></script>
+</body>
+</html>
