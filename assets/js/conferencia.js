@@ -67,6 +67,12 @@ function toggleTheme() {
 /* ============================================================
    BUSCAR ROMANEIOS
    ============================================================ */
+function isoParaBR(iso) {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+
 async function buscarRomaneios() {
   if (!_loggedIn) { alert('Aguarde a conexão com o servidor.'); return; }
 
@@ -85,7 +91,7 @@ async function buscarRomaneios() {
     const res  = await fetch(`${PROXY}/romaneios`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dataInicial: di, dataFinal: df, pesqRomaneios: 'lsAberto', pesqNumero: '' }),
+      body: JSON.stringify({ dataInicial: isoParaBR(di), dataFinal: isoParaBR(df), pesqRomaneios: 'lsAberto', pesqNumero: '' }),
     });
     const json = await res.json();
     const raw  = json.data?.data || json.data;
