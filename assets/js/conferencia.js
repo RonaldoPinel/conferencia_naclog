@@ -197,20 +197,22 @@ async function abrirConferencia(idRomaneio) {
     }
 
     const nfes   = Object.values(lancamentos).filter(n => n && typeof n === 'object');
-    const chaves = nfes.map(n => n.nfe).filter(c => c && String(c).replace(/\D/g, '').length === 44);
+    const nfesPayload = nfes
+      .filter(n => n.nfe && String(n.nfe).replace(/\D/g, '').length === 44)
+      .map(n => ({ nfe: n.nfe, emitente: n.emitente || 'transp' }));
 
-    if (!chaves.length) {
+    if (!nfesPayload.length) {
       setCorpo('<div class="vazio" style="text-align:center;padding:40px 0">Nenhuma chave de NF-e válida encontrada.</div>');
       renderAcoes(idRomaneio, rom, null, []);
       return;
     }
 
     // 3. Consulta SEFAZ via PHP
-    setLoadingMsg(`Consultando ${chaves.length} NF-e(s) na SEFAZ... (pode levar alguns segundos)`);
+    setLoadingMsg(`Consultando ${nfesPayload.length} NF-e(s) na SEFAZ... (pode levar alguns segundos)`);
     const nfeRes  = await fetch(`${CONF_API}/nfe/itens`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chaves }),
+      body: JSON.stringify({ nfes: nfesPayload }),
     });
     const nfeJson = await nfeRes.json();
 
