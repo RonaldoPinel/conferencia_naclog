@@ -2,7 +2,7 @@
    CONFIGURAÇÃO
    ============================================================ */
 const PROXY    = 'https://api-naclog.onrender.com';
-const CONF_API = 'https://SEU_DOMINIO_ACQUAHOST.com.br/api'; // ← alterar após deploy
+const CONF_API = 'https://conferencia.naclubrificantes.com.br';
 
 /* ============================================================
    ESTADO
